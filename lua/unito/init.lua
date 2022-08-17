@@ -1,5 +1,5 @@
-local U = require("px-to-rem.utils")
-local C = require("px-to-rem.config")
+local U = require("unito.utils")
+local C = require("unito.config")
 local M = {}
 
 M.px_to_rem = U.make_converter({

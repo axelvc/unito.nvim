@@ -1,5 +1,5 @@
 local ts_utils = require("nvim-treesitter.ts_utils")
-local C = require("px-to-rem.config")
+local C = require("unito.config")
 
 local M = {}
 

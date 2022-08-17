@@ -31,11 +31,11 @@ vim.keymap.set('n', '<leader>pt', '<Cmd>TogglePxRem<CR>')
 Or if you prefer use Lua functions
 
 ```lua
-local ptr = require('px-to-rem')
+local unito = require('unito')
 
-vim.keymap.set('n', '<leader>px', ptr.px_to_rem)
-vim.keymap.set('n', '<leader>px', ptr.rem_to_px)
-vim.keymap.set('n', '<leader>px', ptr.toggle_px_rem)
+vim.keymap.set('n', '<leader>px', unito.px_to_rem)
+vim.keymap.set('n', '<leader>px', unito.rem_to_px)
+vim.keymap.set('n', '<leader>px', unito.toggle_px_rem)
 ```
 
 ## Configuration
@@ -43,7 +43,7 @@ vim.keymap.set('n', '<leader>px', ptr.toggle_px_rem)
 Example with the default config, you don't need to call if you use the default config
 
 ```lua
-require('template-string').setup({
+require('unito').setup({
   rem = 16, -- rem value used to convertions
   max_decimals = 4, -- max decimal for floating values
 })
