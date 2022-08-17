@@ -44,7 +44,7 @@ Example with the default config, you don't need to call if you use the default c
 
 ```lua
 require('unito').setup({
-  rem = 16, -- rem value used to convertions
+  rem = 16, -- rem value used for conversions
   max_decimals = 4, -- max decimal for floating values
 })
 ```
