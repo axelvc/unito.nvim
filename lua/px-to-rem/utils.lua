@@ -1,6 +1,16 @@
 local ts_utils = require("nvim-treesitter.ts_utils")
+local C = require("px-to-rem.config")
 
 local M = {}
+
+function M.round(n, decimals)
+	if decimals == 0 then
+		return math.floor(n + 0.5)
+	else
+		local power = 10 ^ decimals
+		return math.floor(n * power) / power
+	end
+end
 
 ---@class ConverterData table
 ---@field required_unit string
@@ -20,9 +30,11 @@ function M.make_converter(data)
 		if unit ~= data.required_unit then return end
 
 		local old_val = M.get_value(node)
-		local new_val = data.handler(old_val)
+		local new_val, unit = data.handler(old_val)
 
-		M.update_node(node, new_val)
+		new_val = M.round(new_val, C.options.max_decimals)
+
+		M.update_node(node, new_val .. unit)
 	end
 end
 
