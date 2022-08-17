@@ -1,43 +1,28 @@
 local U = require("px-to-rem.utils")
 local M = {}
 
-M.config = {
+---@class ConfigOptions
+M.options = {
 	rem = 16,
 }
 
-function M.px_to_rem()
-	local node = U.get_valid_node()
+M.px_to_rem = U.make_converter({
+	required_unit = "px",
+	handler = function(old_val)
+		local new_val = old_val / M.options.rem
 
-	-- stylua: ignore
-	if not node then return end
+		return new_val .. "rem"
+	end,
+})
 
-	local format = U.get_format(node)
+M.rem_to_px = U.make_converter({
+	required_unit = "rem",
+	handler = function(old_val)
+		local new_val = old_val * M.options.rem
 
-	-- stylua: ignore
-	if format ~= 'px' then return end
-
-	local old_val = U.get_value(node)
-	local new_val = old_val / M.config.rem
-
-	U.update_node(node, new_val .. "rem")
-end
-
-function M.rem_to_px()
-	local node = U.get_valid_node()
-
-	-- stylua: ignore
-	if not node then return end
-
-	local format = U.get_format(node)
-
-	-- stylua: ignore
-	if format ~= 'rem' then return end
-
-	local old_val = U.get_value(node)
-	local new_val = old_val * M.config.rem
-
-	U.update_node(node, new_val .. "px")
-end
+		return new_val .. "px"
+	end,
+})
 
 function M.toggle_px_rem()
 	local node = U.get_valid_node()
@@ -45,21 +30,18 @@ function M.toggle_px_rem()
   -- stylua: ignore
   if not node then return end
 
-	local format = U.get_format(node)
+	local unit = U.get_unit(node)
 
-	if format == "px" then
+	if unit == "px" then
 		M.px_to_rem()
-	elseif format == "rem" then
+	elseif unit == "rem" then
 		M.rem_to_px()
 	end
 end
 
-function M.setup(config)
-	M.config = vim.tbl_extend("force", M.config, config)
-
-	vim.api.nvim_create_user_command("TogglePxRem", M.toggle_px_rem, {})
-	vim.api.nvim_create_user_command("PxToRem", M.px_to_rem, {})
-	vim.api.nvim_create_user_command("RemToPx", M.rem_to_px, {})
+---@param options ConfigOptions | nil
+function M.setup(options)
+	M.options = vim.tbl_extend("force", M.options, options or {}) --[[@as table]]
 end
 
 return M

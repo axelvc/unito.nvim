@@ -2,6 +2,30 @@ local ts_utils = require("nvim-treesitter.ts_utils")
 
 local M = {}
 
+---@class ConverterData table
+---@field required_unit string
+---@field handler function
+
+---@param data ConverterData
+function M.make_converter(data)
+	return function()
+		local node = M.get_valid_node()
+
+		-- stylua: ignore
+		if not node then return end
+
+		local unit = M.get_unit(node)
+
+		-- stylua: ignore
+		if unit ~= data.required_unit then return end
+
+		local old_val = M.get_value(node)
+		local new_val = data.handler(old_val)
+
+		M.update_node(node, new_val)
+	end
+end
+
 function M.get_valid_node()
 	local node = ts_utils.get_node_at_cursor()
 
@@ -17,16 +41,22 @@ function M.get_valid_node()
 	end
 end
 
-function M.get_format(node)
+---@param node userdata tsnode
+---@return string
+function M.get_unit(node)
 	return vim.treesitter.get_node_text(node:child(0), 0)
 end
 
+---@param node userdata tsnode
+---@return string
 function M.get_value(node)
-	local format = M.get_format(node)
+	local unit = M.get_unit(node)
 
-	return vim.treesitter.get_node_text(node, 0):match("(%d*%.?%d*)" .. format)
+	return vim.treesitter.get_node_text(node, 0):match("(%d*%.?%d*)" .. unit)
 end
 
+---@param node userdata tsnode
+---@param str string
 function M.update_node(node, str)
 	local rs, cs, re, ce = node:range()
 	vim.api.nvim_buf_set_text(0, rs, cs, re, ce, { str })
