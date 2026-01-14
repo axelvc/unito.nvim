@@ -14,6 +14,21 @@ but transforming "px" units to "rem" could be confusing, this plugin tries to ma
 
 ## Usage
 
+### Installation
+
+Install the plugin with your preferred package manager:
+
+```lua
+-- lazy.nvim
+{
+  'axelvc/unito.nvim',
+  config = true,
+  lazy = true,
+}
+```
+
+### Mappings
+
 ```lua
 local unito = require('unito')
 
