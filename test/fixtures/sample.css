@@ -1,0 +1,12 @@
+body {
+    width: 100px;
+    height: 10rem;
+    margin: 16px;
+    padding: 1.5rem;
+    font-size: 14px;
+}
+
+.container {
+    max-width: 1200px;
+    gap: 2rem;
+}
