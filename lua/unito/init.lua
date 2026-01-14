@@ -1,43 +1,33 @@
-local U = require("unito.utils")
 local C = require("unito.config")
+local preview = require("unito.features.preview")
+local sustitution = require("unito.features.sustitution")
+
 local M = {}
 
-M.px_to_rem = U.make_converter({
-	required_unit = "px",
-	handler = function(old_val)
-		local new_val = old_val / C.options.rem
+---Toggle between px and rem at cursor
+function M.toggle()
+	sustitution.replace()
+end
 
-		return new_val, "rem"
-	end,
-})
+---Toggle preview autocmd on/off
+function M.toggle_preview()
+	C.options.virtual_text.enabled = not C.options.virtual_text.enabled
 
-M.rem_to_px = U.make_converter({
-	required_unit = "rem",
-	handler = function(old_val)
-		local new_val = old_val * C.options.rem
-
-		return new_val, "px"
-	end,
-})
-
-function M.toggle_px_rem()
-	local node = U.get_valid_node()
-
-  -- stylua: ignore
-  if not node then return end
-
-	local unit = U.get_unit(node)
-
-	if unit == "px" then
-		M.px_to_rem()
-	elseif unit == "rem" then
-		M.rem_to_px()
+	if C.options.virtual_text.enabled then
+		preview.start()
+	else
+		preview.stop()
 	end
 end
 
----@param options ConfigOptions | nil
+---Setup the plugin
+---@param options ConfigOptions?
 function M.setup(options)
 	C.options = vim.tbl_extend("force", C.options, options or {}) --[[@as table]]
+
+	if C.options.virtual_text.enabled then
+		preview.start()
+	end
 end
 
 return M
