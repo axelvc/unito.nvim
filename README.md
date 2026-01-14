@@ -1,6 +1,6 @@
 # Unito
 
-This plugin is inspired by [PX to REM](https://marketplace.visualstudio.com/items?itemName=sainoba.px-to-rem), I miss this feature when I use neovim
+This plugin is inspired by [PX to REM](https://marketplace.visualstudio.com/items?itemName=sainoba.px-to-rem), I miss this feature when I use Neovim
 
 ## Why?
 
@@ -9,33 +9,16 @@ but transforming "px" units to "rem" could be confusing, this plugin tries to ma
 
 ## Requirements
 
-- Neovim 0.7.0 or later
-- [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) plugin
+- Neovim 0.9.0 or later
+- [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) plugin installed and configured for CSS files
 
-## Commands
-
-- `:PxToRem` - convert cursor value from px to rem
-- `:RemToPx` - convert cursor value from px to rem
-- `:TogglePxRem` - toggle between px and rem values
-
-## Mappings
-
-You can map using predefined commands like this
-
-```lua
-vim.keymap.set('n', '<leader>px', '<Cmd>PxToRem<CR>')
-vim.keymap.set('n', '<leader>pr', '<Cmd>RemToPx<CR>')
-vim.keymap.set('n', '<leader>pt', '<Cmd>TogglePxRem<CR>')
-```
-
-Or if you prefer use Lua functions
+## Usage
 
 ```lua
 local unito = require('unito')
 
-vim.keymap.set('n', '<leader>px', unito.px_to_rem)
-vim.keymap.set('n', '<leader>px', unito.rem_to_px)
-vim.keymap.set('n', '<leader>px', unito.toggle_px_rem)
+vim.keymap.set('n', '<leader>px', function() require('unito').toggle() end) -- toggle between px and rem
+vim.keymap.set('n', '<leader>pp', function() require('unito').toggle_preview() end) -- virtual inline preview of opposite value
 ```
 
 ## Configuration
@@ -45,8 +28,23 @@ Example with the default config, you don't need to call if you use the default c
 ```lua
 require('unito').setup({
   rem = 16, -- rem value used for conversions
-  max_decimals = 4, -- max decimal for floating values
+  max_decimals = 4, -- max decimals for floating values
+  virtual_text = {
+    enabled = true, -- show inline preview when cursor is on a value
+    prefix = "-> ", -- prefix for virtual text
+    hl_group = "Comment", -- highlight group for virtual text
+  },
 })
+```
+
+## Development
+
+### Running Tests
+
+This plugin uses [plenary.nvim](https://github.com/nvim-plenary/plenary.nvim) for testing.
+
+```bash
+make test
 ```
 
 ## License
